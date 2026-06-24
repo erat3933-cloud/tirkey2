@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSchool - Тіркелу Жүйесі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --panel-bg: #ffffff;
+            --primary-neon: #00f0ff;
+            --secondary-neon: #ff007f;
+            --text-dark: #1a1d24;
+            --text-gray: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(rgba(0, 240, 255, 0.05) 2px, transparent 0),
+                radial-gradient(rgba(255, 0, 7f, 0.05) 2px, transparent 0);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px var(--primary-neon);
+        }
+
+        header p {
+            color: var(--text-gray);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px; /* Орталықтандырылған бір блокқа ыңғайлы өлшем */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cyber-panel {
+            background: var(--panel-bg);
+            border: 2px solid var(--text-dark);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 5px 5px 0px var(--text-dark);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            background: #f8fafc;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .cyber-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--text-dark);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+
+        .cyber-btn:hover {
+            background: var(--primary-neon);
+            color: var(--text-dark);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Жасырын Админ Панель Стильдері */
+        .admin-link-wrapper {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .admin-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-decoration: underline;
+        }
+
+        .admin-toggle-btn:hover {
+            color: var(--secondary-neon);
+        }
+
+        #adminPanel {
+            display: none; /* Әдетте жасырулы тұрады */
+            border-color: var(--secondary-neon);
+            animation: slideDown 0.4s ease;
+        }
+
+        .stats-badge {
+            display: inline-block;
+            background: rgba(255, 0, 127, 0.1);
+            border: 1px solid var(--secondary-neon);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .teacher-list {
+            list-style: none;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+            background: #f8fafc;
+            margin-bottom: 15px;
+        }
+
+        .teacher-list li {
+            padding: 8px 12px;
+            border-bottom: 1px dashed #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .time-stamp {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .alert {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            text-align: center;
+            display: none;
+        }
+
+        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CYBER_SCHOOL</h1>
+        <p>// МҰҒАЛІМДЕРДІ ТІРКЕУ ЖҮЙЕСІ</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="cyber-panel">
+            <h2><span style="color: var(--primary-neon);">●</span> ТІРКЕЛУ ОРНЫ</h2>
+            <div class="input-group">
+                <label for="teacherName">Толық аты-жөніңіз:</label>
+                <input type="text" id="teacherName" placeholder="Мысалы: Саматова А.Е." autocomplete="off">
+            </div>
+            <button class="cyber-btn" onclick="registerTeacher()">КЕЛУДІ ТІРКЕУ</button>
+            <div id="regAlert" class="alert"></div>
+        </div>
+
+        <div class="admin-link-wrapper">
+            <button class="admin-toggle-btn" onclick="toggleAuthInput()">[ АДМИН ЖҮЙЕСІ ]</button>
+        </div>
+
+        <div id="authModal" class="cyber-panel" style="display: none; border-color: var(--text-gray);">
+            <h2>КІРУДІ РАСТАУ</h2>
+            <div class="input-group">
+                <label for="adminPass">Администратор құпия сөзі:</label>
+                <input type="password" id="adminPass" placeholder="••••••••">
+            </div>
+            <button class="cyber-btn" onclick="loginAdmin()">КІРУ</button>
+            <div id="adminAlert" class="alert"></div>
+        </div>
+
+        <div id="adminPanel" class="cyber-panel">
+            <h2><span style="color: var(--secondary-neon);">▲</span> БАСҚАРУ ПАНЕЛІ</h2>
+            <div class="stats-badge">
+                БҮГІН КЕЛГЕНДЕР САНЫ: <span id="teacherCount">0</span>
+            </div>
+            <ul id="teacherList" class="teacher-list"></ul>
+            <button class="cyber-btn" style="background: #ef4444; margin-bottom: 10px;" onclick="clearList()">ТІЗІМДІ ТАЗАЛАУ</button>
+            <button class="cyber-btn" style="background: #64748b;" onclick="logoutAdmin()">ПАНЕЛДІ ЖАБУ</button>
+        </div>
+
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = "admin123";
+
+        // Бет жүктелгенде админ сессиясын тексеру
+        window.onload = function() {
+            if(sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                showAdminPanel();
+            }
+        }
+
+        // Мұғалімді тіркеу
+        function registerTeacher() {
+            const nameInput = document.getElementById('teacherName');
+            const name = nameInput.value.trim();
+            const alertBox = document.getElementById('regAlert');
+
+            if (name === "") {
+                showAlert(alertBox, "Аты-жөніңізді енгізіңіз!", "error");
+                return;
+            }
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            let teachers = JSON.parse(localStorage.getItem('teachers')) || [];
+            teachers.push({ name: name, time: timeString });
+            localStorage.setItem('teachers', JSON.stringify(teachers));
+
+            showAlert(alertBox, `Рахмет, ${name}! Тіркелу сәтті өтті (${timeString}).`, "success");
+            nameInput.value = "";
+
+            if(sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                updateAdminData();
+            }
+        }
+
+        // Құпия сөз енгізу өрісін көрсету/жасыру
+        function toggleAuthInput() {
+            const authModal = document.getElementById('authModal');
+            if(sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                showAdminPanel();
+            } else {
+                authModal.style.display = authModal.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Админ логин
+        function loginAdmin() {
+            const passInput = document.getElementById('adminPass');
+            const alertBox = document.getElementById('adminAlert');
+
+            if (passInput.value === ADMIN_PASSWORD) {
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                document.getElementById('authModal').style.display = 'none';
+                showAdminPanel();
+                passInput.value = "";
+                alertBox.style.display = "none";
+            } else {
+                showAlert(alertBox, "Құпия сөз қате!", "error");
+            }
+        }
+
+        // Админ панелін іске қосу
+        function showAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'block';
+            updateAdminData();
+        }
+
+        // Админнен шығу
+        function logoutAdmin() {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // Деректерді жаңарту
+        function updateAdminData() {
+            const teachers = JSON.parse(localStorage.getItem('teachers')) || [];
+            const countSpan = document.getElementById('teacherCount');
+            const listUl = document.getElementById('teacherList');
+
+            countSpan.innerText = teachers.length;
+            listUl.innerHTML = "";
+
+            if(teachers.length === 0) {
+                listUl.innerHTML = "<li style='color: var(--text-gray); justify-content: center;'>Тізім бос</li>";
+                return;
+            }
+
+            teachers.slice().reverse().forEach(teacher => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${teacher.name}</span><span class="time-stamp">${teacher.time}</span>`;
+                listUl.appendChild(li);
+            });
+        }
+
+        // Тазалау
+        function clearList() {
+            if(confirm("Барлық тізімді өшіруді растайсыз ба?")) {
+                localStorage.removeItem('teachers');
+                updateAdminData();
+            }
+        }
+
+        function showAlert(element, text, type) {
+            element.innerText = text;
+            element.style.display = "block";
+            element.className = "alert " + (type === "success" ? "alert-success" : "alert-error");
+            if(type === "success") {
+                setTimeout(() => { element.style.display = "none"; }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>
